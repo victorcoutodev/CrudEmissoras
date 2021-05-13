@@ -35,7 +35,7 @@ namespace CrudEmissoras
 
             services.AddDbContext<Contexto>(opcoes => opcoes.UseSqlServer(Configuration.GetConnectionString("ConexaoBD")));
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,13 +54,8 @@ namespace CrudEmissoras
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Emissoras}/{action=Index}/{id?}");
-            });
+            app.UseRouting();
+            app.UseEndpoints(e => { e.MapControllers(); });
         }
     }
 }

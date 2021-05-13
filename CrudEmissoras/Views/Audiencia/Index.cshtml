@@ -1,0 +1,45 @@
+﻿@model IEnumerable<CrudEmissoras.Models.Audiencia>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="CriarAudiencia">Criar Audiencia</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Pontos_audiencia)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Data_hora_audiencia)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Emissora_audiencia.Nome)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Pontos_audiencia)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Data_hora_audiencia)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Emissora_audiencia.Nome)
+            </td>
+            <td>
+                <a asp-action="AtualizarAudiencia" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="ExcluirAudiencia" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

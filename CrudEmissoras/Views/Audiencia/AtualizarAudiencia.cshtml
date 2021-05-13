@@ -1,0 +1,34 @@
+﻿@model CrudEmissoras.Models.Audiencia
+
+@{
+    ViewData["Title"] = "AtualizarAudiencia";
+}
+
+<h2>Atualizar Audiencia</h2>
+
+<h4>Audiencia</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AtualizarAudiencia">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Pontos_audiencia" class="control-label"></label>
+                <input asp-for="Pontos_audiencia" class="form-control" />
+                <span asp-validation-for="Pontos_audiencia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

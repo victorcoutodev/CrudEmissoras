@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace CrudEmissoras.Controllers
 {
+    [Route("[controller]/[action]")]
     public class EmissorasController : Controller
     {
         private readonly Contexto _contexto;
