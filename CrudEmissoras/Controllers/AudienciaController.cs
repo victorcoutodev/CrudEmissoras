@@ -50,7 +50,10 @@ namespace CrudEmissoras.Controllers
         {
             if (id != null)
             {
-                Audiencia audiencia = _contexto.Audiencias.Find(id);
+                Audiencia audiencia = _contexto.Audiencias.First(c => c.Id == id);
+
+                List<SelectListItem> selectListItems = _contexto.Emissoras.Select(c => new SelectListItem() { Text = c.Nome, Value = c.Id.ToString() }).ToList();
+                ViewBag.Emissoras = selectListItems;
                 return View(audiencia);
             }
             else return NotFound();
@@ -61,7 +64,9 @@ namespace CrudEmissoras.Controllers
         {
             if (id != null)
             {
-                if (ModelState.IsValid)
+                audiencia.Emissora_audiencia = _contexto.Emissoras.Where(c => c.Id == audiencia.Emissora_audiencia.Id).FirstOrDefault();
+
+                if (audiencia.Emissora_audiencia.Nome != null)
                 {
                     _contexto.Update(audiencia);
                     await _contexto.SaveChangesAsync();

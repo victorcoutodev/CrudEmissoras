@@ -56,6 +56,12 @@ namespace CrudEmissoras
             app.UseCookiePolicy();
             app.UseRouting();
             app.UseEndpoints(e => { e.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
         }
     }
 }

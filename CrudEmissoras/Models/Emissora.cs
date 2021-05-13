@@ -13,6 +13,5 @@ namespace CrudEmissoras.Models
         [RegularExpression(@"^[A-Z]+[a-zA-Z\s]*$", ErrorMessage = "Proibido a inclusão de caracteres especiais no nome da emissora.")]
         [Required]
         public string Nome { get; set; }
-
     }
 }
