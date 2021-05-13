@@ -33,9 +33,18 @@ namespace CrudEmissoras.Controllers
         {
             if (ModelState.IsValid)
             {
-                _contexto.Add(emissora);
-                await _contexto.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                Emissora emissoraCadastrada = _contexto.Emissoras.Where(e => e.Nome == emissora.Nome).FirstOrDefault();
+
+                if (emissoraCadastrada == default)
+                {
+                    _contexto.Add(emissora);
+                    await _contexto.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                } else 
+                {
+                    ViewBag.ErrorMessage = "Emissora já cadastrada.";
+                    return View(emissora);
+                }
             }
             else return View(emissora);
         }
