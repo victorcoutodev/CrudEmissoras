@@ -94,6 +94,28 @@ namespace CrudEmissoras.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> DetalharEmissora(int? id, bool searchString)
+        {
+            ViewData["CurrentFilter"] = searchString;
+
+            var emissora = await _contexto.Emissoras
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (searchString)
+            {
+                var somatorioAudienciaPorDia = _contexto.Audiencias.Where(s => s.Emissora_audiencia_id == emissora.Id).Sum(s => s.Pontos_audiencia);
+                ViewBag.Message = "O somatório de pontos de audiencia para a Emissora " + emissora.Nome + " é " + somatorioAudienciaPorDia;
+
+            }else
+            {
+                var mediaAudienciaPorDia = _contexto.Audiencias.Where(s => s.Emissora_audiencia_id == emissora.Id).Average(s => s.Pontos_audiencia);
+                ViewBag.Message = "A média de pontos de audiencia para a Emissora " + emissora.Nome + " é " + mediaAudienciaPorDia;
+            }
+
+            return View(emissora);
+        }
+
+        [HttpGet]
         public IActionResult ExcluirEmissora(int? id)
         {
             if (id != null)

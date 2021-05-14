@@ -1,0 +1,49 @@
+﻿@model CrudEmissoras.Models.Emissora
+
+@{
+    ViewData["Title"] = "DetalhesEmissora";
+}
+
+<h2>Detalhes Emissora</h2>
+
+<h4>Emissora</h4>
+<hr />
+<form asp-action="DetalharEmissora" method="get">
+    <div class="form-actions no-color">
+        <p>
+            <div class="exemplo-radio">
+                Escolha o tipo de visão:
+                <input type="radio" value="true" name="SearchString" id="somatorio" />
+                <label for="somatorio">Somatório</label>
+                <input type="radio" value="false" name="SearchString" id="media" />
+                <label for="media">Média</label>
+                <input type="hidden" asp-for="Id" />
+                <input type="submit" value="Search" class="btn btn-default" /> |
+            </div>       
+        </p>
+    </div>
+</form>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="MudarVisao">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Nome" class="control-label"></label>
+                <input asp-for="Nome" class="form-control" disabled/>
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+            <h2>
+                @ViewBag.Message
+            </h2>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Retorne a lista</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
