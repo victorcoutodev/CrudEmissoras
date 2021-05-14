@@ -150,16 +150,5 @@ namespace CrudEmissoras.Controllers
             return false;
         }
 
-        //private Boolean VerificaCadastroAudiencia(Audiencia audiencia, Emissora emissora) 
-        //{
-        //    bool temConflitoDataHora = ExisteAudienciaCadastradaNaMesmaDataHora(audiencia);
-        //    if (temConflitoDataHora)
-        //    {
-        //        ViewBag.ErrorMessage = "Audiencia já cadastrada nesta data hora.";
-        //        PopulataListaEmissoras(emissora);
-        //        return true;
-        //    }
-        //    return false;
-        //}
     }
 }

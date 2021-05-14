@@ -18,9 +18,24 @@ namespace CrudEmissoras.Controllers
             _contexto = contexto;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
-            return View(await _contexto.Emissoras.ToListAsync());
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["CurrentFilter"] = searchString;
+
+            var emissoras = from s in _contexto.Emissoras
+                           select s;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                emissoras = emissoras.Where(s => s.Nome.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    emissoras = emissoras.OrderByDescending(s => s.Nome);
+                    break;
+            }
+            return View(emissoras);
         }
 
         [HttpGet]
