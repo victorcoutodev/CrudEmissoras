@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CrudEmissoras.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20210512225223_CriacaoBD")]
-    partial class CriacaoBD
+    [Migration("20210514122704_criacaoBD")]
+    partial class criacaoBD
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,13 +29,13 @@ namespace CrudEmissoras.Migrations
 
                     b.Property<DateTime>("Data_hora_audiencia");
 
-                    b.Property<int>("Emissora_audienciaId");
+                    b.Property<int>("Emissora_audiencia_id");
+
+                    b.Property<string>("NomeEmissora");
 
                     b.Property<int>("Pontos_audiencia");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Emissora_audienciaId");
 
                     b.ToTable("Audiencias");
                 });
@@ -52,14 +52,6 @@ namespace CrudEmissoras.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Emissoras");
-                });
-
-            modelBuilder.Entity("CrudEmissoras.Models.Audiencia", b =>
-                {
-                    b.HasOne("CrudEmissoras.Models.Emissora", "Emissora_audiencia")
-                        .WithMany()
-                        .HasForeignKey("Emissora_audienciaId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

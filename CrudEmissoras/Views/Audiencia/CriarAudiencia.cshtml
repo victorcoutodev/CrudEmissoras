@@ -16,18 +16,17 @@
                 <label asp-for="Pontos_audiencia" class="control-label"></label>
                 <input asp-for="Pontos_audiencia" class="form-control" />
                 <span asp-validation-for="Pontos_audiencia" class="text-danger"></span>
-                <p>@ViewBag.ErrorMessage</p>
             </div>
             <div class="form-group">
                 <label asp-for="Data_hora_audiencia" class="control-label"></label>
                 <input asp-for="Data_hora_audiencia" class="form-control" />
                 <span asp-validation-for="Data_hora_audiencia" class="text-danger"></span>
+                <p>@ViewBag.ErrorMessage</p>
             </div>
-            @*<div class="form-group">
-            @Html.DropDownList("Emissora_audiencia", ViewBag.Emissoras as SelectList, "Selecione", new { @class = "form-control" })
-        </div>*@
-            <select asp-for="Emissora_audiencia.Id"
-                    asp-items="@ViewBag.Emissoras" class="form-control"></select>
+            <select asp-for="Emissora_audiencia_id"
+                    asp-items="@ViewBag.Emissoras" class="form-control">
+                <option value="">-- Selecione uma emissora --</option>
+            </select>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>

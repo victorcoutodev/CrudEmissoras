@@ -33,7 +33,10 @@ namespace CrudEmissoras
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<Contexto>(opcoes => opcoes.UseSqlServer(Configuration.GetConnectionString("ConexaoBD")));
+            services.AddDbContext<Contexto>(opcoes => 
+                    {
+                        opcoes.UseSqlServer(Configuration.GetConnectionString("ConexaoBD"));
+                    });
 
             services.AddMvc();
         }

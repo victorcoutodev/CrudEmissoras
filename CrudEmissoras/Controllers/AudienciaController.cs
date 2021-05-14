@@ -19,62 +19,91 @@ namespace CrudEmissoras.Controllers
             _contexto = contexto;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index() 
         {
-            return View(await _contexto.Audiencias.ToListAsync());
+            var audiencias = _contexto.Audiencias;
+            return View(await audiencias.ToListAsync());
         }
 
         [HttpGet]
         public IActionResult CriarAudiencia()
         {
-            ViewBag.Emissoras = _contexto.Emissoras.Select(c => new SelectListItem() { Text = c.Nome, Value = c.Id.ToString()}).ToList();
+            PopulataListaEmissoras();
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> CriarAudiencia(Audiencia audiencia)
-            
+        public async Task<IActionResult> CriarAudiencia([Bind("Pontos_audiencia,Data_hora_audiencia,Emissora_audiencia_id")] Audiencia audiencia)
         {
-            audiencia.Emissora_audiencia = _contexto.Emissoras.Where(c => c.Id == audiencia.Emissora_audiencia.Id).FirstOrDefault();
-            if (audiencia.Emissora_audiencia.Nome != null)
+            var EmissoraEncontrada = await _contexto.Emissoras
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == audiencia.Emissora_audiencia_id);
+
+            audiencia.NomeEmissora = EmissoraEncontrada.Nome;
+
+            bool temConflitoDataHora = ExisteAudienciaCadastradaNaMesmaDataHora(audiencia);
+            if(temConflitoDataHora)
             {
-                _contexto.Audiencias.Add(audiencia);
+                ViewBag.ErrorMessage = "Audiencia já cadastrada nesta data hora.";
+                PopulataListaEmissoras(EmissoraEncontrada);
+                return View(audiencia);
+            }
+
+            if (ModelState.IsValid)
+            {
+                _contexto.Add(audiencia);
                 await _contexto.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));                 
+                return RedirectToAction(nameof(Index));
             }
             else return View(audiencia);
         }
 
         [HttpGet]
-        public IActionResult AtualizarAudiencia(int? id)
+        public async Task<IActionResult> AtualizarAudiencia(int? id)
         {
-            if (id != null)
+            if (id == null)
             {
-                Audiencia audiencia = _contexto.Audiencias.First(c => c.Id == id);
-
-                List<SelectListItem> selectListItems = _contexto.Emissoras.Select(c => new SelectListItem() { Text = c.Nome, Value = c.Id.ToString() }).ToList();
-                ViewBag.Emissoras = selectListItems;
-                return View(audiencia);
+                return NotFound();
             }
-            else return NotFound();
+            Audiencia audiencia = _contexto.Audiencias.Find(id);
+
+            if (audiencia == null)
+            {
+                return NotFound();
+            }
+            PopulataListaEmissoras(audiencia.Emissora_audiencia_id);
+            return View(audiencia);
         }
 
         [HttpPost]
         public async Task<IActionResult> AtualizarAudiencia(int? id, Audiencia audiencia)
         {
-            if (id != null)
-            {
-                audiencia.Emissora_audiencia = _contexto.Emissoras.Where(c => c.Id == audiencia.Emissora_audiencia.Id).FirstOrDefault();
+            var EmissoraEncontrada = await _contexto.Emissoras
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == audiencia.Emissora_audiencia_id);
+            audiencia.NomeEmissora = EmissoraEncontrada.Nome;
 
-                if (audiencia.Emissora_audiencia.Nome != null)
-                {
-                    _contexto.Update(audiencia);
-                    await _contexto.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
-                else return View(audiencia);
+            if (id == null)
+            {
+                return NotFound();
             }
-            else return NotFound();
+
+            bool temConflitoDataHora = ExisteAudienciaCadastradaNaMesmaDataHora(audiencia);
+            if (temConflitoDataHora)
+            {
+                ViewBag.ErrorMessage = "Audiencia já cadastrada nesta data hora.";
+                PopulataListaEmissoras(EmissoraEncontrada);
+                return View(audiencia);
+            }
+
+            if (ModelState.IsValid)
+            {
+                _contexto.Audiencias.Update(audiencia);
+                await _contexto.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            PopulataListaEmissoras(EmissoraEncontrada);
+            return View(audiencia);
         }
 
         [HttpGet]
@@ -99,5 +128,38 @@ namespace CrudEmissoras.Controllers
             }
             else return NotFound();
         }
+        private void PopulataListaEmissoras(object emissoraSelecionada = null)
+        {
+            var emissoraQuery = from d in _contexto.Emissoras
+                                orderby d.Nome
+                                select d;
+            ViewBag.Emissoras = new SelectList(emissoraQuery.AsNoTracking(), "Id", "Nome", emissoraSelecionada);
+        }
+
+        private Boolean ExisteAudienciaCadastradaNaMesmaDataHora(Audiencia audiencia)
+        {
+            List<Audiencia> audiencias = _contexto.Audiencias.ToList();
+            foreach (Audiencia audienciaPersistida in audiencias)
+            {
+                if (audienciaPersistida.NomeEmissora.Equals(audiencia.NomeEmissora)
+                    && audienciaPersistida.Data_hora_audiencia.CompareTo(audienciaPersistida.Data_hora_audiencia) == 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        //private Boolean VerificaCadastroAudiencia(Audiencia audiencia, Emissora emissora) 
+        //{
+        //    bool temConflitoDataHora = ExisteAudienciaCadastradaNaMesmaDataHora(audiencia);
+        //    if (temConflitoDataHora)
+        //    {
+        //        ViewBag.ErrorMessage = "Audiencia já cadastrada nesta data hora.";
+        //        PopulataListaEmissoras(emissora);
+        //        return true;
+        //    }
+        //    return false;
+        //}
     }
 }

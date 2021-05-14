@@ -19,7 +19,7 @@
                 @Html.DisplayNameFor(model => model.Data_hora_audiencia)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Emissora_audiencia.Nome)
+                @Html.DisplayNameFor(model => model.NomeEmissora)
             </th>
         </tr>
     </thead>
@@ -33,7 +33,7 @@
                 @Html.DisplayFor(modelItem => item.Data_hora_audiencia)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Emissora_audiencia.Nome)
+                @Html.DisplayFor(modelItem => item.NomeEmissora)
             </td>
             <td>
                 <a asp-action="AtualizarAudiencia" asp-route-id="@item.Id">Edit</a> |

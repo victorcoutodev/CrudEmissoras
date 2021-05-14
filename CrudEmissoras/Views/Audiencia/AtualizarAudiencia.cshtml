@@ -22,9 +22,11 @@
                 <label asp-for="Data_hora_audiencia" class="control-label"></label>
                 <input asp-for="Data_hora_audiencia" class="form-control" />
                 <span asp-validation-for="Data_hora_audiencia" class="text-danger"></span>
+                <p>@ViewBag.ErrorMessage</p>
             </div>
-            <select asp-for="Emissora_audiencia.Id"
-                    asp-items="@ViewBag.Emissoras" class="form-control"></select>
+            <select asp-for="Emissora_audiencia_id" class="form-control" asp-items="ViewBag.Emissoras">
+                <option value="">-- Selecione uma emissora --</option>
+            </select>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
@@ -33,7 +35,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Retorne a lista</a>
 </div>
 
 @section Scripts {
