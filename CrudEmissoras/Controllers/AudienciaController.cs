@@ -19,12 +19,14 @@ namespace CrudEmissoras.Controllers
             _contexto = contexto;
         }
 
-        public async Task<IActionResult> Index(string sortOrder, string searchString) 
+        public async Task<IActionResult> Index(string sortOrder, string searchString, string firstDate, string lastDate) 
         {
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
             ViewData["PointsSortParm"] = String.IsNullOrEmpty(sortOrder) ? "points_desc" : "";
             ViewData["CurrentFilter"] = searchString;
+            ViewData["FirstDateFilter"] = firstDate;
+            ViewData["LastDateFilter"] = lastDate;
 
             var audiencias = from s in _contexto.Audiencias
                            select s;
@@ -32,6 +34,15 @@ namespace CrudEmissoras.Controllers
             {
                 audiencias = audiencias.Where(s => s.NomeEmissora.Contains(searchString));
             }
+
+            if(!String.IsNullOrEmpty(firstDate) && !String.IsNullOrEmpty(lastDate))
+            {
+                DateTime firstDateConverted = Convert.ToDateTime(firstDate);
+                DateTime lastDateConverted = Convert.ToDateTime(lastDate);
+
+                audiencias = _contexto.Audiencias.Where(e => e.Data_hora_audiencia.Ticks >= firstDateConverted.Ticks && e.Data_hora_audiencia.Ticks <= lastDateConverted.Ticks);
+            }
+
             switch (sortOrder)
             {
                 case "name_desc":

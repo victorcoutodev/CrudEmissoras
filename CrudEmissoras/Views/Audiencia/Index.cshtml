@@ -17,6 +17,16 @@
             <a asp-action="Index">Retorne para a lista completa</a>
         </p>
     </div>
+    <div class="row">
+        <div class="form-actions no-color">
+
+            <label for="firstDate" class="control-label">Data inicio audiencias:</label>
+            <input type="date" name="firstDate" value="@ViewData["FirstDateFilter"]" />
+
+            <label for="lastDate" class="control-label">Data fim audiencias:</label>
+            <input type="date" name="lastDate" value="@ViewData["LastDateFilter"]" />
+        </div>
+    </div>
 </form>
 <table class="table">
     <thead>
