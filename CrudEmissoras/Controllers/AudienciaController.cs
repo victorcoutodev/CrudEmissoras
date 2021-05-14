@@ -19,9 +19,34 @@ namespace CrudEmissoras.Controllers
             _contexto = contexto;
         }
 
-        public async Task<IActionResult> Index() 
+        public async Task<IActionResult> Index(string sortOrder, string searchString) 
         {
-            var audiencias = _contexto.Audiencias;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["PointsSortParm"] = String.IsNullOrEmpty(sortOrder) ? "points_desc" : "";
+            ViewData["CurrentFilter"] = searchString;
+
+            var audiencias = from s in _contexto.Audiencias
+                           select s;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                audiencias = audiencias.Where(s => s.NomeEmissora.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    audiencias = audiencias.OrderByDescending(s => s.NomeEmissora);
+                    break;
+                case "Date":
+                    audiencias = audiencias.OrderBy(s => s.Data_hora_audiencia);
+                    break;
+                case "date_desc":
+                    audiencias = audiencias.OrderByDescending(s => s.Data_hora_audiencia);
+                    break;
+                case "points_desc":
+                    audiencias = audiencias.OrderByDescending(s => s.Pontos_audiencia);
+                    break;
+            }
             return View(await audiencias.ToListAsync());
         }
 
